@@ -136,6 +136,7 @@ public class Bot extends TelegramLongPollingBot {
                 keyboardFirstRow.clear();
                 keyboardFirstRow.add("\uD83D\uDD0EПоиск");
                 keyboardFirstRow.add("➕Добавление");
+                keyboardFirstRow.add("❌Удаление");
                 keyboardSecondRow.add("⤴️Добавить акт выдачи");
                 keyboardSecondRow.add("ℹ️Поиск по ID");
                 keyboard.add(keyboardFirstRow);
@@ -298,21 +299,22 @@ public class Bot extends TelegramLongPollingBot {
 
             if (msg.contains("книга") | msg.contains("Книга")) {
                 String input_data = msg;
-                Pattern pattern = Pattern.compile("(\\w+)\\s+(.+)\\s+(.+)\\s+\\\"(.+)\\\"\\s+(.+)", Pattern.UNICODE_CHARACTER_CLASS
+                Pattern pattern = Pattern.compile("\\s+(\\d+)\\s+(.+)\\s+\\\"(.+)\\\"\\s+(.+)", Pattern.UNICODE_CHARACTER_CLASS
                         | Pattern.CASE_INSENSITIVE);
                 String value = "";
                 String genre = "";
                 String name = "";
                 String author = "";
                 Matcher matcher = pattern.matcher(input_data);
-                if (matcher.matches()) {
-                    value = matcher.group(2);
-                    genre = matcher.group(3);
-                    name = matcher.group(4);
-                    author = matcher.group(5);
+                if (matcher.find()) {
+                    value = matcher.group(1);
+                    genre = matcher.group(2);
+                    name = matcher.group(3);
+                    author = matcher.group(4);
                 }
-                Integer col_value = Integer.parseInt(value.trim());
+
                 try {
+                    Integer col_value = Integer.parseInt(value);
                     login.add_new_book(name, author, col_value, genre);
                 } catch (Exception exception) {
                     exception.printStackTrace();
